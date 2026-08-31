@@ -1,0 +1,9 @@
+kitty_conf_path: "~/.config/kitty/kitty.conf"
+generated_conf_path: "~/.config/kitty/kittypaper-background.conf"
+reload_method: "auto"
+background_tint: 0.95
+background_opacity: 1.0
+wallpaper_dirs:
+  - "~/wallpaper"
+cache_dir: "~/.cache/kittypaper"
+state_file: "~/.local/state/kittypaper/state.json"

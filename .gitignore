@@ -1,0 +1,6 @@
+/tmp/
+bin/
+*.exe
+kittypaper
+kittypaper-tui
+kittypaper-gui
