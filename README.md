@@ -4,6 +4,16 @@ Wallpaper manager for the [Kitty](https://sw.kovidgoyal.net/kitty/) terminal.
 
 Inspired by [Walt](https://github.com/davidaf3/walt) (Hyprland wallpaper manager), but built only for Kitty. Kittypaper writes a separate `kittypaper-background.conf` and includes it from your `kitty.conf` — it **never overwrites** your main Kitty config.
 
+## Screenshots
+
+**GUI** — browse, preview, and apply wallpapers with tint/opacity controls:
+
+![Kittypaper GUI](docs/screenshots/gui.png)
+
+**TUI** — fast terminal picker with filter and keyboard shortcuts:
+
+![Kittypaper TUI](docs/screenshots/tui.png)
+
 ---
 
 ## Features
