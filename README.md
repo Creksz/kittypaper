@@ -43,7 +43,7 @@ Inspired by [Walt](https://github.com/gitfudge0/walt) (Hyprland wallpaper manage
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kittypaper.git
+git clone https://github.com/Creksz/kittypaper.git
 cd kittypaper
 ```
 
