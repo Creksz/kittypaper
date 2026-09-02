@@ -5,7 +5,7 @@ Thanks for helping improve Kittypaper. Bug reports, docs, and pull requests are 
 ## Development setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kittypaper.git
+git clone https://github.com/Creksz/kittypaper.git
 cd kittypaper
 make build
 make install   # installs kittypaper to ~/.local/bin
