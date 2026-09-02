@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -27,6 +28,11 @@ func (w wallpaperItem) Description() string { return w.item.Path }
 type applyMsg struct {
 	result dto.ApplyResult
 	err    error
+}
+
+type refreshMsg struct {
+	items []wallpaper.Item
+	err   error
 }
 
 type model struct {
@@ -56,6 +62,11 @@ func newModel(svc *service.WallpaperService, reloadMethod kitty.ReloadMethod, it
 	l.SetFilteringEnabled(true)
 	l.Styles.Title = lipgloss.NewStyle().Bold(true)
 	l.SetShowHelp(true)
+	l.AdditionalShortHelpKeys = func() []key.Binding {
+		return []key.Binding{
+			key.NewBinding(key.WithKeys("R", "f5"), key.WithHelp("R", "refresh")),
+		}
+	}
 
 	return model{
 		list:         l,
@@ -92,6 +103,28 @@ func (m model) applyRandom() tea.Cmd {
 	}
 }
 
+func (m model) refresh() tea.Cmd {
+	return func() tea.Msg {
+		items, err := m.svc.ListWallpapers(context.Background())
+		return refreshMsg{items: items, err: err}
+	}
+}
+
+func itemsToListEntries(items []wallpaper.Item) []list.Item {
+	entries := make([]list.Item, 0, len(items))
+	for _, item := range items {
+		entries = append(entries, wallpaperItem{item: item})
+	}
+	return entries
+}
+
+func (m model) formatStatusLine(count int) string {
+	if status, err := m.svc.Status(context.Background()); err == nil && status.ActivePath != "" {
+		return fmt.Sprintf("%d wallpapers · active: %s", count, status.ActivePath)
+	}
+	return fmt.Sprintf("%d wallpapers", count)
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
@@ -110,10 +143,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.result.Warning != "" {
 			m.message += " (warning: " + msg.result.Warning + ")"
 		}
-		if status, err := m.svc.Status(context.Background()); err == nil && status.ActivePath != "" {
-			m.statusLine = "active: " + status.ActivePath
-		}
+		m.statusLine = m.formatStatusLine(len(m.list.Items()))
 		return m, nil
+	case refreshMsg:
+		m.applying = false
+		if msg.err != nil {
+			m.message = "error: " + msg.err.Error()
+			return m, nil
+		}
+		selectedPath := ""
+		if selected, ok := m.list.SelectedItem().(wallpaperItem); ok {
+			selectedPath = selected.item.Path
+		}
+		cmd := m.list.SetItems(itemsToListEntries(msg.items))
+		if selectedPath != "" {
+			for i, item := range msg.items {
+				if item.Path == selectedPath {
+					m.list.Select(i)
+					break
+				}
+			}
+		}
+		m.message = fmt.Sprintf("refreshed — %d wallpapers", len(msg.items))
+		m.statusLine = m.formatStatusLine(len(msg.items))
+		return m, cmd
 	case tea.KeyMsg:
 		if m.applying {
 			return m, nil
@@ -130,6 +183,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.applying = true
 			m.message = "picking random..."
 			return m, m.applyRandom()
+		case "e", "f5":
+			m.applying = true
+			m.message = "refreshing..."
+			return m, m.refresh()
 		}
 	}
 
@@ -164,13 +221,8 @@ func Run(svc *service.WallpaperService, reloadMethod kitty.ReloadMethod) error {
 		return fmt.Errorf("no wallpapers found in configured directories")
 	}
 
-	statusLine := fmt.Sprintf("%d wallpapers", len(items))
-	if status, err := svc.Status(context.Background()); err == nil && status.ActivePath != "" {
-		statusLine = "active: " + status.ActivePath
-	}
-
 	m := newModel(svc, reloadMethod, items)
-	m.statusLine = statusLine
+	m.statusLine = m.formatStatusLine(len(items))
 
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	_, err = p.Run()

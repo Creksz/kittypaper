@@ -110,6 +110,24 @@ func (s *WallpaperService) ensureIncludeReady(ctx context.Context) error {
 	return s.deps.Inspector.EnsureInclude(ctx)
 }
 
+func (s *WallpaperService) PreviewBackground(ctx context.Context, req dto.PreviewRequest) error {
+	if s.deps.Live == nil {
+		return domainerr.ErrNotImplemented
+	}
+	path := req.Path
+	if path == "" {
+		if s.deps.Repo == nil {
+			return domainerr.ErrNotImplemented
+		}
+		active, err := s.deps.Repo.GetActive(ctx)
+		if err != nil || active.Path == "" {
+			return domainerr.ErrInvalidWallpaper
+		}
+		path = active.Path
+	}
+	return s.deps.Live.PreviewBackground(ctx, path, req.Tint, req.Opacity)
+}
+
 func (s *WallpaperService) ListWallpapers(ctx context.Context) ([]wallpaper.Item, error) {
 	if s.deps.Repo == nil {
 		return nil, domainerr.ErrNotImplemented

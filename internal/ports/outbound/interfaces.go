@@ -29,6 +29,7 @@ type KittyReloader interface {
 // KittyLiveApplier applies a wallpaper to running Kitty instances immediately.
 type KittyLiveApplier interface {
 	ApplyImage(ctx context.Context, wallpaperPath string) error
+	PreviewBackground(ctx context.Context, wallpaperPath string, tint, opacity float64) error
 }
 
 type CacheStore interface {

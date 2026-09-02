@@ -3,6 +3,7 @@ generated_conf_path: "~/.config/kitty/kittypaper-background.conf"
 reload_method: "auto"
 background_tint: 0.95
 background_opacity: 1.0
+# wallhaven_api_key: ""  # optional — improves Wallhaven rate limits
 wallpaper_dirs:
   - "~/wallpaper"
 cache_dir: "~/.cache/kittypaper"

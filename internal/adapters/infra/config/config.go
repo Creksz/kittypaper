@@ -28,6 +28,7 @@ type Settings struct {
 	ConfigPath        string
 	BackgroundTint    float64
 	BackgroundOpacity float64
+	WallhavenAPIKey   string
 }
 
 func DefaultSettings() Settings {
@@ -97,6 +98,12 @@ func ExpandSettings(settings Settings) (Settings, error) {
 	return settings, nil
 }
 
+// LibraryFilePath returns the path for favorites/recent/collections storage.
+func (s Settings) LibraryFilePath() (string, error) {
+	dir := filepath.Dir(s.StateFile)
+	return filepath.Join(dir, "library.json"), nil
+}
+
 func DefaultConfigFilePath() (string, error) {
 	return pathx.Abs(filepath.Join("~", ".config", "kittypaper", "config.yaml"))
 }
@@ -123,6 +130,9 @@ func Save(settings Settings) error {
 	b.WriteString("reload_method: " + strconv.Quote(string(expanded.ReloadMethod)) + "\n")
 	b.WriteString("background_tint: " + formatFloat(expanded.BackgroundTint) + "\n")
 	b.WriteString("background_opacity: " + formatFloat(expanded.BackgroundOpacity) + "\n")
+	if expanded.WallhavenAPIKey != "" {
+		b.WriteString("wallhaven_api_key: " + strconv.Quote(expanded.WallhavenAPIKey) + "\n")
+	}
 	b.WriteString("cache_dir: " + strconv.Quote(expanded.CacheDir) + "\n")
 	b.WriteString("state_file: " + strconv.Quote(expanded.StateFile) + "\n")
 	b.WriteString("wallpaper_dirs:\n")
@@ -205,6 +215,8 @@ func applyYAML(raw []byte, settings *Settings) error {
 				}
 				settings.BackgroundOpacity = f
 			}
+		case "wallhaven_api_key":
+			settings.WallhavenAPIKey = value
 		case "wallpaper_dirs":
 			settings.WallpaperDirs = nil
 			inDirs = true

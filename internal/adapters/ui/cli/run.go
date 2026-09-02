@@ -150,7 +150,11 @@ Flags:
 	case "gui":
 		return gui.Run(container)
 	case "version":
-		fmt.Fprintf(stdout, "kittypaper %s\n", version.String())
+		out := version.String()
+		if len(cmdArgs) > 1 && (cmdArgs[1] == "--full" || cmdArgs[1] == "-v") {
+			out = version.Full()
+		}
+		fmt.Fprintf(stdout, "kittypaper %s\n", out)
 		return nil
 	default:
 		return fmt.Errorf("unknown command %q", cmdArgs[0])

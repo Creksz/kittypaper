@@ -16,6 +16,12 @@ type ApplyResult struct {
 	Warning       string
 }
 
+type PreviewRequest struct {
+	Path    string
+	Tint    float64
+	Opacity float64
+}
+
 type StatusResult struct {
 	ActivePath        string
 	GeneratedConfPath string

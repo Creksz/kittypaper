@@ -2,7 +2,7 @@
 
 GOTOOLCHAIN ?= local
 GO ?= go
-APP_VERSION ?= 0.1.0
+APP_VERSION ?= 0.2.0
 GIT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo dev)
 LDFLAGS := -ldflags "-s -w -X kittypaper/internal/version.Version=$(APP_VERSION) -X kittypaper/internal/version.Commit=$(GIT_COMMIT)"
 
