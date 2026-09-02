@@ -160,7 +160,7 @@ kittypaper random
 |-----|--------|
 | `Enter` | Apply selected wallpaper |
 | `r` | Random |
-| `R` / `F5` | Refresh library |
+| `e` / `F5` | Refresh library |
 | `/` | Filter list |
 | `q` / `Esc` | Quit |
 
