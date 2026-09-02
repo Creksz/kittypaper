@@ -132,10 +132,12 @@ kittypaper setup
 | Key | Action |
 |-----|--------|
 | `Enter` | Apply selected wallpaper |
-| `r` | Random |
-| `e` / `F5` | Refresh library |
+| `r` | Random wallpaper |
+| `R` / `e` / `F5` | Refresh library |
 | `/` | Filter list |
+| `↑`/`↓` or `j`/`k` | Move selection |
 | `q` / `Esc` | Quit |
+| `?` | Show all shortcuts |
 
 ---
 

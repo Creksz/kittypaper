@@ -115,7 +115,7 @@ Flags:
 		fmt.Fprintf(stdout, "include: %t\n", status.IncludeOK)
 		fmt.Fprintf(stdout, "kitty.conf: %s\n", status.KittyConfPath)
 		fmt.Fprintf(stdout, "generated: %s\n", status.GeneratedConfPath)
-		fmt.Fprintf(stdout, "indexed: %d\n", status.WallpaperCount)
+		fmt.Fprintf(stdout, "wallpaper total: %d\n", status.WallpaperCount)
 		return nil
 	case "setup":
 		result, err := bootstrap.Setup(ctx, *configPath)

@@ -47,9 +47,21 @@ type model struct {
 	quitting     bool
 }
 
+var (
+	applyKey   = key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "apply"))
+	randomKey  = key.NewBinding(key.WithKeys("r"), key.WithHelp("r", "random"))
+	refreshKey = key.NewBinding(key.WithKeys("R", "e", "f5"), key.WithHelp("R/e/F5", "refresh"))
+)
+
 func newModel(svc *service.WallpaperService, reloadMethod kitty.ReloadMethod, items []wallpaper.Item) model {
 	delegate := list.NewDefaultDelegate()
 	delegate.ShowDescription = true
+	delegate.ShortHelpFunc = func() []key.Binding {
+		return []key.Binding{applyKey, randomKey}
+	}
+	delegate.FullHelpFunc = func() [][]key.Binding {
+		return [][]key.Binding{{applyKey, randomKey, refreshKey}}
+	}
 
 	entries := make([]list.Item, 0, len(items))
 	for _, item := range items {
@@ -58,14 +70,16 @@ func newModel(svc *service.WallpaperService, reloadMethod kitty.ReloadMethod, it
 
 	l := list.New(entries, delegate, 0, 0)
 	l.Title = "Kittypaper"
-	l.SetShowStatusBar(true)
+	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(true)
 	l.Styles.Title = lipgloss.NewStyle().Bold(true)
+	l.Styles.HelpStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
 	l.SetShowHelp(true)
 	l.AdditionalShortHelpKeys = func() []key.Binding {
-		return []key.Binding{
-			key.NewBinding(key.WithKeys("R", "f5"), key.WithHelp("R", "refresh")),
-		}
+		return []key.Binding{refreshKey}
+	}
+	l.AdditionalFullHelpKeys = func() []key.Binding {
+		return []key.Binding{refreshKey}
 	}
 
 	return model{
@@ -183,7 +197,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.applying = true
 			m.message = "picking random..."
 			return m, m.applyRandom()
-		case "e", "f5":
+		case "R", "e", "f5":
 			m.applying = true
 			m.message = "refreshing..."
 			return m, m.refresh()
@@ -203,11 +217,15 @@ func (m model) View() string {
 	b.WriteString(m.list.View())
 	if m.message != "" {
 		b.WriteString("\n")
-		b.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("214")).Render(m.message))
+		msgStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
+		if strings.HasPrefix(m.message, "error:") {
+			msgStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("203"))
+		}
+		b.WriteString(msgStyle.Render(m.message))
 	}
 	if m.statusLine != "" {
 		b.WriteString("\n")
-		b.WriteString(lipgloss.NewStyle().Faint(true).Render(m.statusLine))
+		b.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("240")).Render(m.statusLine))
 	}
 	return b.String()
 }
