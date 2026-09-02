@@ -11,8 +11,8 @@ type Item struct {
 }
 
 type SearchResult struct {
-	Items      []Item
-	Page       int
-	LastPage   int
-	Total      int
+	Items    []Item
+	Page     int
+	LastPage int
+	Total    int
 }

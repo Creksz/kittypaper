@@ -34,8 +34,11 @@ lint: fmt vet
 install: build-cli
 	mkdir -p "$(BINDIR)"
 	install -m 755 "$(BIN_DIR)/kittypaper" "$(BINDIR)/kittypaper"
+	@"$(BINDIR)/kittypaper" setup
+	@echo ""
 	@echo "Installed: $(BINDIR)/kittypaper"
-	@echo "Make sure $(BINDIR) is on your PATH, then run: kittypaper gui"
+	@echo "Verify:    kittypaper version"
+	@echo "Launch:    kittypaper gui"
 
 uninstall:
 	rm -f "$(BINDIR)/kittypaper"

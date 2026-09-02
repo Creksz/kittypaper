@@ -8,8 +8,8 @@ import (
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
-	_ "image/png"
 	"image/png"
+	_ "image/png"
 	"os"
 	"path/filepath"
 	"sync"
@@ -20,8 +20,8 @@ import (
 )
 
 const (
-	thumbListW     = 96
-	thumbListH     = 72
+	thumbListW      = 96
+	thumbListH      = 72
 	thumbPreviewMax = 1280
 )
 

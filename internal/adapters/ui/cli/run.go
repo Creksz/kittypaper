@@ -41,7 +41,8 @@ Commands:
   set PATH     apply a wallpaper file
   random       apply a random wallpaper from configured directories
   status       show active wallpaper and include status
-  init         create generated config and optionally add the kitty.conf include
+  init         create config files and wire Kitty (first-time setup)
+  setup        same as init + create ~/.config/kittypaper/config.yaml if missing
   restore      re-apply the last saved wallpaper (useful after reboot)
   tui          open interactive wallpaper picker (terminal)
   gui          open wallpaper browser window
@@ -115,6 +116,26 @@ Flags:
 		fmt.Fprintf(stdout, "kitty.conf: %s\n", status.KittyConfPath)
 		fmt.Fprintf(stdout, "generated: %s\n", status.GeneratedConfPath)
 		fmt.Fprintf(stdout, "indexed: %d\n", status.WallpaperCount)
+		return nil
+	case "setup":
+		result, err := bootstrap.Setup(ctx, *configPath)
+		if err != nil {
+			return err
+		}
+		if result.ConfigCreated {
+			fmt.Fprintf(stdout, "created config: %s\n", result.ConfigPath)
+		} else {
+			fmt.Fprintf(stdout, "config: %s\n", result.ConfigPath)
+		}
+		fmt.Fprintf(stdout, "generated: %s\n", result.GeneratedConfPath)
+		if result.IncludeWritten {
+			fmt.Fprintf(stdout, "include added to %s\n", result.KittyConfPath)
+		}
+		fmt.Fprintf(stdout, "wallpaper folders:\n")
+		for _, dir := range result.WallpaperDirs {
+			fmt.Fprintf(stdout, "  - %s\n", dir)
+		}
+		fmt.Fprintf(stdout, "\nNext: put images in a wallpaper folder, then run: kittypaper gui\n")
 		return nil
 	case "init":
 		writeInclude := true

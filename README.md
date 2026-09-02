@@ -47,13 +47,19 @@ git clone https://github.com/Creksz/kittypaper.git
 cd kittypaper
 ```
 
-### 2. Install the binary
+### 2. Install (includes first-time setup)
 
 ```bash
 make install
 ```
 
-This builds and installs `kittypaper` to `~/.local/bin/kittypaper`.
+This will:
+
+- Install `kittypaper` to `~/.local/bin/kittypaper`
+- Create `~/.config/kittypaper/config.yaml` (if missing)
+- Create `~/.config/kitty/kittypaper-background.conf`
+- Add the include line to your `kitty.conf`
+- Create `~/wallpaper` and `~/Pictures/Wallpapers` folders
 
 ### 3. Add to PATH (if needed)
 
@@ -81,54 +87,20 @@ make build
 
 ## First-time setup
 
-Run these steps **once** after installation.
+`make install` runs `kittypaper setup` automatically. You only need to:
 
-### Step 1 — Create your config
-
-```bash
-mkdir -p ~/.config/kittypaper
-cp configs/example.kittypaper.yaml ~/.config/kittypaper/config.yaml
-```
-
-Edit `~/.config/kittypaper/config.yaml` and set your wallpaper folder:
-
-```yaml
-wallpaper_dirs:
-  - "~/wallpaper"
-  - "~/Pictures/Wallpapers"
-```
-
-### Step 2 — Wire Kitty
+1. Put wallpapers in `~/wallpaper` or `~/Pictures/Wallpapers`
+2. Edit `~/.config/kittypaper/config.yaml` if your folders differ
 
 ```bash
-kittypaper init
+kittypaper version   # verify install
+kittypaper gui       # pick a wallpaper
 ```
 
-This will:
-
-- Create `~/.config/kitty/kittypaper-background.conf`
-- Add `include /path/to/kittypaper-background.conf` to `kitty.conf` (append only)
-- Restore your last wallpaper if one was saved before
-
-### Step 3 — Pick a wallpaper
-
-**GUI (recommended):**
+Manual setup (if you skipped `make install`):
 
 ```bash
-kittypaper gui
-```
-
-**TUI:**
-
-```bash
-kittypaper tui
-```
-
-**CLI:**
-
-```bash
-kittypaper set ~/wallpaper/your-image.jpg
-kittypaper random
+kittypaper setup
 ```
 
 ---
@@ -143,7 +115,8 @@ kittypaper random
 | `kittypaper random` | Apply a random wallpaper |
 | `kittypaper status` | Show active wallpaper and config state |
 | `kittypaper restore` | Re-apply last saved wallpaper |
-| `kittypaper init` | Setup / repair Kitty include |
+| `kittypaper setup` | First-time config + Kitty wiring (runs on `make install`) |
+| `kittypaper init` | Repair generated Kitty include file |
 | `kittypaper version` | Show version |
 
 ### GUI

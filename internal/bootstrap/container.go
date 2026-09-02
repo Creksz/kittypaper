@@ -8,8 +8,8 @@ import (
 	"kittypaper/internal/adapters/infra/config"
 	"kittypaper/internal/adapters/infra/download"
 	"kittypaper/internal/adapters/infra/fs"
-	"kittypaper/internal/adapters/infra/library"
 	infraKitty "kittypaper/internal/adapters/infra/kitty"
+	"kittypaper/internal/adapters/infra/library"
 	"kittypaper/internal/adapters/infra/wallhaven"
 	"kittypaper/internal/app/dto"
 	"kittypaper/internal/app/service"
@@ -49,15 +49,15 @@ func NewContainer(settings config.Settings) *Container {
 	libStore := &library.Store{Path: libPath}
 
 	onlineSvc := &service.OnlineService{
-		Wallhaven: wallhaven.Client{APIKey: settingsCopy.WallhavenAPIKey},
+		Wallhaven:  wallhaven.Client{APIKey: settingsCopy.WallhavenAPIKey},
 		Downloader: download.Downloader{},
 	}
 
 	return &Container{
-		Settings: &settingsCopy,
-		Repo:     repo,
-		Writer:   writer,
-		Library:  libStore,
+		Settings:      &settingsCopy,
+		Repo:          repo,
+		Writer:        writer,
+		Library:       libStore,
 		OnlineService: onlineSvc,
 		WallpaperService: service.NewWallpaperService(service.WallpaperDeps{
 			Repo:      repo,

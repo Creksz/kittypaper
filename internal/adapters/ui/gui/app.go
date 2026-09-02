@@ -24,16 +24,16 @@ type browser struct {
 	app    fyne.App
 	window fyne.Window
 
-	allItems     []wallpaper.Item
-	filtered     []wallpaper.Item
-	selected     int
+	allItems      []wallpaper.Item
+	filtered      []wallpaper.Item
+	selected      int
 	activeSection librarySection
 
-	onlineItems     []online.Item
-	onlineSelected  int
-	onlinePage      int
-	onlineLastPage  int
-	onlineQuery     string
+	onlineItems    []online.Item
+	onlineSelected int
+	onlinePage     int
+	onlineLastPage int
+	onlineQuery    string
 
 	downloadCancel context.CancelFunc
 

@@ -14,16 +14,16 @@ type previewPanel struct {
 	browser *browser
 	root    fyne.CanvasObject
 
-	preview     *canvas.Image
-	placeholder *widget.Label
-	infoBox     *fyne.Container
-	tintSlider  *widget.Slider
+	preview       *canvas.Image
+	placeholder   *widget.Label
+	infoBox       *fyne.Container
+	tintSlider    *widget.Slider
 	opacitySlider *widget.Slider
 	tintLabel     *widget.Label
 	opacityLabel  *widget.Label
-	applyBtn    *widget.Button
-	downloadBtn *widget.Button
-	favoriteBtn *widget.Button
+	applyBtn      *widget.Button
+	downloadBtn   *widget.Button
+	favoriteBtn   *widget.Button
 }
 
 func newPreviewPanel(b *browser) *previewPanel {

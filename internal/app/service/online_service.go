@@ -12,7 +12,7 @@ import (
 )
 
 type OnlineService struct {
-	Wallhaven wallhaven.Client
+	Wallhaven  wallhaven.Client
 	Downloader download.Downloader
 }
 

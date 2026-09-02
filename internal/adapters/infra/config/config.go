@@ -128,8 +128,8 @@ func Save(settings Settings) error {
 	b.WriteString("kitty_conf_path: " + strconv.Quote(expanded.KittyConfPath) + "\n")
 	b.WriteString("generated_conf_path: " + strconv.Quote(expanded.GeneratedConfPath) + "\n")
 	b.WriteString("reload_method: " + strconv.Quote(string(expanded.ReloadMethod)) + "\n")
-	b.WriteString("background_tint: " + formatFloat(expanded.BackgroundTint) + "\n")
-	b.WriteString("background_opacity: " + formatFloat(expanded.BackgroundOpacity) + "\n")
+	b.WriteString("background_tint: " + strconv.FormatFloat(expanded.BackgroundTint, 'f', 2, 64) + "\n")
+	b.WriteString("background_opacity: " + strconv.FormatFloat(expanded.BackgroundOpacity, 'f', 2, 64) + "\n")
 	if expanded.WallhavenAPIKey != "" {
 		b.WriteString("wallhaven_api_key: " + strconv.Quote(expanded.WallhavenAPIKey) + "\n")
 	}

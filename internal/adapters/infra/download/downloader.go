@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-
 type ProgressFunc func(done, total int64)
 
 type Downloader struct {
