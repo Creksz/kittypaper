@@ -1,4 +1,6 @@
-# Kittypaper
+<p align="center">
+  <img src="docs/logo.png" alt="kittypaper" width="360">
+</p>
 
 Wallpaper manager for the [Kitty](https://sw.kovidgoyal.net/kitty/) terminal.
 

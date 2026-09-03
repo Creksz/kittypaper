@@ -85,6 +85,7 @@ func (b *browser) build() {
 	b.app.Settings().SetTheme(theme.DarkTheme())
 
 	b.window = b.app.NewWindow("Kittypaper")
+	b.window.SetIcon(logoResource())
 	b.window.Resize(fyne.NewSize(1100, 780))
 
 	b.previewPanel = newPreviewPanel(b)

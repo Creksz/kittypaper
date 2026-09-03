@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"image/color"
 	"path/filepath"
 
 	"fyne.io/fyne/v2"
@@ -12,33 +13,68 @@ import (
 	"kittypaper/internal/version"
 )
 
+type searchTheme struct {
+	fyne.Theme
+}
+
+func (t searchTheme) Size(name fyne.ThemeSizeName) float32 {
+	switch name {
+	case theme.SizeNameText:
+		return 16
+	case theme.SizeNameInnerPadding:
+		return 12
+	case theme.SizeNamePadding:
+		return 8
+	default:
+		return t.Theme.Size(name)
+	}
+}
+
 func (b *browser) buildHeader() fyne.CanvasObject {
-	title := canvas.NewText("KITTYPAPER", theme.ForegroundColor())
-	title.TextStyle = fyne.TextStyle{Bold: true}
-	title.TextSize = 20
+	logo := canvas.NewImageFromResource(logoResource())
+	logo.FillMode = canvas.ImageFillContain
+	logo.SetMinSize(fyne.NewSize(220, 52))
+
+	badge := canvas.NewRectangle(color.NRGBA{R: 245, G: 245, B: 247, A: 255})
+	badge.CornerRadius = 8
+	badge.SetMinSize(fyne.NewSize(236, 56))
+	brand := container.NewPadded(container.NewMax(badge, container.NewPadded(logo)))
 
 	b.globalSearch = widget.NewEntry()
-	b.globalSearch.SetPlaceHolder("Search...")
+	b.globalSearch.SetPlaceHolder("Search wallpapers...")
+	b.globalSearch.OnChanged = func(q string) {
+		if b.activeSection == sectionOnline {
+			return
+		}
+		if b.filterEntry != nil && b.filterEntry.Text != q {
+			b.filterEntry.SetText(q)
+		}
+	}
 	b.globalSearch.OnSubmitted = func(q string) {
 		if b.activeSection == sectionOnline {
 			b.onlineQuery = q
 			b.onlinePanel.search(q, 1)
 			return
 		}
-		if b.filterEntry != nil {
+		if b.filterEntry != nil && b.filterEntry.Text != q {
 			b.filterEntry.SetText(q)
 		}
 		b.applyFilter()
 	}
 
+	searchSlot := canvas.NewRectangle(color.Transparent)
+	searchSlot.SetMinSize(fyne.NewSize(360, 40))
+	searchBox := container.NewThemeOverride(
+		container.NewMax(searchSlot, b.globalSearch),
+		searchTheme{Theme: theme.DarkTheme()},
+	)
+
 	settingsBtn := widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
 		b.showSettingsDialog()
 	})
 
-	right := container.NewBorder(nil, nil, nil, settingsBtn, b.globalSearch)
-	right.Resize(fyne.NewSize(280, 36))
-
-	return container.NewBorder(nil, nil, title, right)
+	right := container.NewBorder(nil, nil, nil, settingsBtn, searchBox)
+	return container.NewPadded(container.NewBorder(nil, nil, brand, right))
 }
 
 func (b *browser) buildToolbar() fyne.CanvasObject {
